@@ -20,7 +20,7 @@ import javax.persistence.OneToOne;
 public class Category extends AbsEntity {
     private String name;
     @ManyToOne
-    private Category category;
+    private Category parentCategory;
     @OneToOne
     private Attachment attachment;
 
