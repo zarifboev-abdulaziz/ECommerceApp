@@ -5,9 +5,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import uz.pdp.olchauzcloneapp.entity.Product;
+import uz.pdp.olchauzcloneapp.projection.ProductCharacteristics;
 import uz.pdp.olchauzcloneapp.projection.SearchProductProjection;
 import uz.pdp.olchauzcloneapp.projection.ViewProductProjection;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -23,6 +25,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "            where c.id =:categoryId AND lower(p.name) like lower(concat('%', :search, '%'))")
     Page<ViewProductProjection> getProductsByCategory(Pageable pageable, Long categoryId, String search);
 
+    @Query(nativeQuery = true, value = "select c.name as characteristic," +
+            " v.value as characteristicValue \n" +
+            "from products p\n" +
+            "join products_characteristics_values pcv on p.id = pcv.products_id\n" +
+            "join characteristics_values cv on pcv.characteristics_values_id = cv.id\n" +
+            "join characteristics c on c.id = cv.characteristic_id\n" +
+            "join values v on cv.value_id = v.id\n" +
+            "where p.id =:productId")
+    List<ProductCharacteristics> getProductCharacteristics(Long productId);
 
 
 }

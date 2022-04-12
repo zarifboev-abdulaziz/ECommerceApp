@@ -1,6 +1,9 @@
+insert into genders (name) VALUES ('MALE');   --gender id = 1
+insert into genders (name) VALUES ('FEMALE'); --gender id = 2
+
 insert into users
-(date_of_birth, email, enabled, full_name, gender, password, phone_number)
-VALUES (now(), 'user@gmail.com', true, 'user', 'MALE', '123', '123456789');  -- user id = 1
+(date_of_birth, email, enabled, full_name, gender_id, password, phone_number)
+VALUES (now(), 'user@gmail.com', true, 'user', 1, '123', '123456789');  -- user id = 1
 
 insert into attachments (content_type, original_name, size) values ('image/png', 'photo1', 120);  -- attachment id = 1
 insert into attachments (content_type, original_name, size) values ('image/png', 'photo2', 120);  -- attachment id = 2
@@ -31,4 +34,41 @@ insert into products_photos (products_id, photos_id) VALUES (4, 1);
 insert into products_photos (products_id, photos_id) VALUES (4, 4);
 insert into products_photos (products_id, photos_id) VALUES (5, 1);
 insert into products_photos (products_id, photos_id) VALUES (5, 5);
+
+insert into characteristics (name) VALUES ('Language');     -- id = 1
+insert into characteristics (name) VALUES ('Page');         -- id = 2
+insert into characteristics (name) VALUES ('CoverType');    -- id = 3
+insert into characteristics (name) VALUES ('BookType');     -- id = 4
+insert into characteristics (name) VALUES ('YearOfIssue');  -- id = 5
+insert into characteristics (name) VALUES ('Inscription');  -- id = 6
+insert into characteristics (name) VALUES ('Publisher');    -- id = 7
+insert into characteristics (name) VALUES ('Author');       -- id = 8
+
+insert into values (value) VALUES ('Uzbek');            -- id = 1
+insert into values (value) VALUES ('234');              -- id = 2
+insert into values (value) VALUES ('Leather');          -- id = 3
+insert into values (value) VALUES ('Paper book');       -- id = 4
+insert into values (value) VALUES ('2021');             -- id = 5
+insert into values (value) VALUES ('Kirill');           -- id = 6
+insert into values (value) VALUES ('Yangi Asr Avlodi'); -- id = 7
+insert into values (value) VALUES ('Xolid Ertugrul');   -- id = 8
+
+insert into characteristics_values (characteristic_id, value_id) VALUES (1, 1);  -- id = 1
+insert into characteristics_values (characteristic_id, value_id) VALUES (2, 2);  -- id = 2
+insert into characteristics_values (characteristic_id, value_id) VALUES (3, 3);  -- id = 3
+insert into characteristics_values (characteristic_id, value_id) VALUES (4, 4);  -- id = 4
+insert into characteristics_values (characteristic_id, value_id) VALUES (5, 5);  -- id = 5
+insert into characteristics_values (characteristic_id, value_id) VALUES (6, 6);  -- id = 6
+insert into characteristics_values (characteristic_id, value_id) VALUES (7, 7);  -- id = 7
+insert into characteristics_values (characteristic_id, value_id) VALUES (8, 8);  -- id = 8
+
+-- Adding Characteristics to Product with Id = 1
+insert into products_characteristics_values (products_id, characteristics_values_id) VALUES (1, 1);
+insert into products_characteristics_values (products_id, characteristics_values_id) VALUES (1, 2);
+insert into products_characteristics_values (products_id, characteristics_values_id) VALUES (1, 3);
+insert into products_characteristics_values (products_id, characteristics_values_id) VALUES (1, 4);
+insert into products_characteristics_values (products_id, characteristics_values_id) VALUES (1, 5);
+insert into products_characteristics_values (products_id, characteristics_values_id) VALUES (1, 6);
+insert into products_characteristics_values (products_id, characteristics_values_id) VALUES (1, 7);
+insert into products_characteristics_values (products_id, characteristics_values_id) VALUES (1, 8);
 

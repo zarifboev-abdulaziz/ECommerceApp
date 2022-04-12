@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import uz.pdp.olchauzcloneapp.common.ApiResponse;
 import uz.pdp.olchauzcloneapp.dto.ProductDto;
 import uz.pdp.olchauzcloneapp.entity.*;
+import uz.pdp.olchauzcloneapp.projection.ProductCharacteristics;
 import uz.pdp.olchauzcloneapp.projection.SearchProductProjection;
 import uz.pdp.olchauzcloneapp.entity.Product;
 import uz.pdp.olchauzcloneapp.projection.ViewProductProjection;
@@ -198,5 +199,15 @@ public class ProductService {
         productDescriptions.put("fullDescription", productDescription.getDescription());
 
         return new ApiResponse("ok", true, productDescriptions);
+    }
+
+    public ApiResponse getProductFullCharacteristics(Long productId) {
+
+        List<ProductCharacteristics> productCharacteristics = productRepository.getProductCharacteristics(productId);
+
+        if (productCharacteristics.size() == 0)
+            return new ApiResponse("No Characteristics found for that Product", false);
+
+        return new ApiResponse("Ok", true, productCharacteristics);
     }
 }
