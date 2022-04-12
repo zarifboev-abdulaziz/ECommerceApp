@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import uz.pdp.olchauzcloneapp.entity.template.AbsEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor

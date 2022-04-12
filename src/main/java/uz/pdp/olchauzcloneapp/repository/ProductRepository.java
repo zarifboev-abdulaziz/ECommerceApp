@@ -8,6 +8,8 @@ import uz.pdp.olchauzcloneapp.entity.Product;
 import uz.pdp.olchauzcloneapp.projection.SearchProductProjection;
 import uz.pdp.olchauzcloneapp.projection.ViewProductProjection;
 
+import java.util.Optional;
+
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(nativeQuery = true, value = "select p.id as productId,\n" +
