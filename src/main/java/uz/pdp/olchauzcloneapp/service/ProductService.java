@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.pdp.olchauzcloneapp.common.ApiResponse;
+import uz.pdp.olchauzcloneapp.projection.SearchProductProjection;
 import uz.pdp.olchauzcloneapp.projection.ViewProductProjection;
 import uz.pdp.olchauzcloneapp.repository.ProductRepository;
 
@@ -22,5 +23,12 @@ public class ProductService {
 
 
         return null;
+    }
+
+    public ApiResponse getProductByName(Integer page, Integer size, String search) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<SearchProductProjection> productByName = productRepository.getProductByName(pageable, search);
+        return new ApiResponse("Success", true, productByName);
     }
 }
