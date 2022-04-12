@@ -12,11 +12,11 @@ insert into categories (name, attachment_id, parent_category_id) VALUES ('«Hilo
 insert into categories (name, attachment_id, parent_category_id) VALUES ('Azon kitoblari', 5, 2);               -- category id = 5
 
 
-insert into products (discount, name, price, short_description, warranty_period_month, category_id) VALUES (0, 'Odobingiz obruyingiz', 6, 'some short description', 0, 5);    -- product id = 1
-insert into products (discount, name, price, short_description, warranty_period_month, category_id) VALUES (0, 'Oltin Silsila', 10, 'some short description', 0, 4);          -- product id = 2
-insert into products (discount, name, price, short_description, warranty_period_month, category_id) VALUES (0, 'Xadis va Hayot', 4, 'some short description', 0, 4);          -- product id = 3
-insert into products (discount, name, price, short_description, warranty_period_month, category_id) VALUES (0, 'Barakaning Sirlari', 1, 'some short description', 0, 3);      -- product id = 4
-insert into products (discount, name, price, short_description, warranty_period_month, category_id) VALUES (0, 'Iqror', 4, 'some short description', 0, 3);                   -- product id = 5
+insert into products (discount, name, price, short_description, warranty_period_month, category_id, cover_image_id) VALUES (0, 'Odobingiz obruyingiz', 6, 'some short description', 0, 5, 1);    -- product id = 1
+insert into products (discount, name, price, short_description, warranty_period_month, category_id, cover_image_id) VALUES (0, 'Oltin Silsila', 10, 'some short description', 0, 4, 2);          -- product id = 2
+insert into products (discount, name, price, short_description, warranty_period_month, category_id, cover_image_id) VALUES (0, 'Xadis va Hayot', 4, 'some short description', 0, 4, 3);          -- product id = 3
+insert into products (discount, name, price, short_description, warranty_period_month, category_id, cover_image_id) VALUES (0, 'Barakaning Sirlari', 1, 'some short description', 0, 3, 4);      -- product id = 4
+insert into products (discount, name, price, short_description, warranty_period_month, category_id, cover_image_id) VALUES (0, 'Iqror', 4, 'some short description', 0, 3, 5);                   -- product id = 5
 
 insert into products_photos (products_id, photos_id) VALUES (1, 1);
 insert into products_photos (products_id, photos_id) VALUES (1, 2);

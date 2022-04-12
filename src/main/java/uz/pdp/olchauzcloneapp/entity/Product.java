@@ -21,13 +21,17 @@ import java.util.List;
 public class Product extends AbsEntity {
     private String name;
     private String shortDescription;
+
     @OneToMany
     private List<Color> colorList;
+
     private double price;
     private float warrantyPeriodMonth;
     private double discount;
     @ManyToMany
     private List<Attachment> photos;
+    @ManyToOne
+    private Attachment coverImage;
     @ManyToMany
     private List<CharacteristicsValues> characteristicsValues;
     @ManyToOne
