@@ -23,15 +23,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
 
-
-    @Query(nativeQuery = true,value = "select p.id as productId,\n" +
-            "       p.name as productName,\n" +
-            "       p.price as productPrice,\n" +
-            "       p.cover_image_id as productPhotoId,\n" +
-            "       c.id as categoryId,\n" +
-            "       c.name as categoryName\n" +
-            "from products p\n" +
-            "         join categories c on c.id = p.category_id\n" +
-            "where lower(p.name) like lower(concat ('%',:search,'%'))")
-    Page<SearchProductProjection> getProductByName(Pageable pageable,String search);
 }
