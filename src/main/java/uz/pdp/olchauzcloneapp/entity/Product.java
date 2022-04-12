@@ -22,9 +22,6 @@ public class Product extends AbsEntity {
     private String name;
     private String shortDescription;
 
-    @OneToMany
-    private List<Color> colorList;
-
     private double price;
     private float warrantyPeriodMonth;
     private double discount;

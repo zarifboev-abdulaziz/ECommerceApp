@@ -37,15 +37,10 @@ public class User extends AbsEntity implements UserDetails {
     @ManyToMany
     private Set<Role> roles = new HashSet<>();
 
-    private boolean enabled = false;
+    private boolean enabled ;
 
 
-    public User(String fullName, String email, String password, Set<Role> roles) {
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
-    }
+
 
     //UserDetails methods
     @Override
@@ -82,6 +77,13 @@ public class User extends AbsEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.enabled;
+        return true;
+    }
+
+    public User(String fullName, String email, String password, Set<Role> roles) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
     }
 }
