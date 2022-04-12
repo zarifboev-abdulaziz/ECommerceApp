@@ -9,6 +9,7 @@ import uz.pdp.olchauzcloneapp.entity.template.AbsEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class Product extends AbsEntity {
     private List<Attachment> photos;
     @ManyToMany
     private List<CharacteristicsValues> characteristicsValues;
+    @ManyToOne
+    private Category category;
 
 
 
