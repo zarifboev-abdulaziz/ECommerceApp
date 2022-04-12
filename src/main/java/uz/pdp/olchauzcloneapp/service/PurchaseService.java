@@ -9,12 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import uz.pdp.olchauzcloneapp.entity.*;
+import uz.pdp.olchauzcloneapp.entity.address.Street;
 import uz.pdp.olchauzcloneapp.entity.enums.OrderStatus;
-import uz.pdp.olchauzcloneapp.repository.OrderItemsRepository;
-import uz.pdp.olchauzcloneapp.repository.TransactionHistoryProductsRepository;
-import uz.pdp.olchauzcloneapp.repository.TransactionHistoryRepository;
+import uz.pdp.olchauzcloneapp.repository.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 // Zuhridin Bakhriddinov 4/12/2022 11:09 AM
@@ -25,31 +25,40 @@ public class PurchaseService {
     @Autowired
     TransactionHistoryRepository transactionHistoryRepository;
     @Autowired
-    TransactionHistoryProductsRepository  transactionHistoryProductsRepository;
+    TransactionHistoryProductsRepository transactionHistoryProductsRepository;
 
+    @Autowired
+    PayTypeRepository payTypeRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    StreetRepository streetRepository;
 
     public boolean fulfillOrder(Session session) {
 
-        List<OrderItem> orderItems = orderItemsRepository.findByCreatedByAndOrderStatus(Long.valueOf(session.getClientReferenceId()), OrderStatus.
-        NEW);
-      if (orderItems.size()!=0){
+        Optional<PayType> payTypeOptional = payTypeRepository.findById(1L);
+        Optional<Street> streetOptional = streetRepository.findById(1L);
+        List<OrderItem> orderItems = orderItemsRepository.findByCreatedByAndOrderStatus(Long.valueOf(session.getClientReferenceId()), OrderStatus.NEW);
+        double amount =session.getAmountTotal().doubleValue() / 100;
 
-        for (OrderItem orderItem : orderItems) {
-            TransactionHistory savedTransactionHistory = transactionHistoryRepository.save(new TransactionHistory());
-            transactionHistoryProductsRepository.save(new TransactionHistoryProducts(savedTransactionHistory,orderItem.getProduct(),orderItem.getQuantity()));
+        if (orderItems.size() != 0) {
 
-        }
-          return true;
-      }
-      else
-          return false;
+            TransactionHistory savedTransactionHistory = transactionHistoryRepository.save(new TransactionHistory(payTypeOptional.get(), amount,streetOptional.get() ));
+            for (OrderItem orderItem : orderItems) {
+
+
+                transactionHistoryProductsRepository.save(new TransactionHistoryProducts(savedTransactionHistory, orderItem.getProduct(), orderItem.getQuantity()));
+            }
+            return true;
+        } else
+            return false;
 
     }
 
     public ResponseEntity<?> getStripeSession(User user, List<SessionCreateParams.LineItem> lineItems, List<OrderItem> orderItems) {
         for (OrderItem ticket : orderItems) {
 
-            double ticketPrice = (ticket.getProduct().getPrice()*100+30)/(1-2.9/100);
+            double ticketPrice = (ticket.getProduct().getPrice() * 100 + 30) / (1 - 2.9 / 100);
             SessionCreateParams.LineItem.PriceData.ProductData productData = SessionCreateParams.LineItem.PriceData.ProductData
                     .builder()
                     .setName(ticket.getProduct().getName())
@@ -59,7 +68,7 @@ public class PurchaseService {
                     .builder()
                     .setProductData(productData)
                     .setCurrency("usd")
-                    .setUnitAmount((long) (ticketPrice * 100))
+                    .setUnitAmount((long) (ticketPrice ))
                     .build();
 
             SessionCreateParams.LineItem lineItem = SessionCreateParams.LineItem
@@ -93,9 +102,6 @@ public class PurchaseService {
         }
         return ResponseEntity.badRequest().build();
     }
-
-
-
 
 
 }

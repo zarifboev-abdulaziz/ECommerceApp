@@ -2,7 +2,7 @@ package uz.pdp.olchauzcloneapp.service;
 
 //Asilbek Fayzullayev 12.04.2022 11:23   
 
-import com.sun.tools.javac.util.DefinedBy;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uz.pdp.olchauzcloneapp.common.ApiResponse;
