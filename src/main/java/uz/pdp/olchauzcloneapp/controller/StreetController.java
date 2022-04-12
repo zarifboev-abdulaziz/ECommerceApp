@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uz.pdp.olchauzcloneapp.dto.StreetDto;
 import uz.pdp.olchauzcloneapp.entity.address.Street;
 import uz.pdp.olchauzcloneapp.poyload.ApiResponse;
 import uz.pdp.olchauzcloneapp.service.StreetService;
@@ -39,13 +40,13 @@ public class StreetController {
     }
 
     @PostMapping
-    public HttpEntity<?> addStreet(Street street){
+    public HttpEntity<?> addStreet(@RequestBody StreetDto street){
         ApiResponse apiResponse = streetService.addStreet(street);
         return ResponseEntity.status(apiResponse.isStatus() ? 200 : 404).body(apiResponse);
     }
 
     @PutMapping("/{streetId}")
-    public HttpEntity<?> editStreet(@PathVariable Long streetId, @RequestBody Street street){
+    public HttpEntity<?> editStreet(@PathVariable Long streetId, @RequestBody StreetDto street){
         ApiResponse apiResponse = streetService.editStreet(streetId, street);
         return ResponseEntity.status(apiResponse.isStatus() ? 200 : 404).body(apiResponse);
     }

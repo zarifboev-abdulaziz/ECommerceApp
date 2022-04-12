@@ -3,6 +3,7 @@ package uz.pdp.olchauzcloneapp.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uz.pdp.olchauzcloneapp.dto.DistrictDto;
 import uz.pdp.olchauzcloneapp.entity.address.District;
 import uz.pdp.olchauzcloneapp.entity.address.Region;
 import uz.pdp.olchauzcloneapp.poyload.ApiResponse;
@@ -37,8 +38,8 @@ public class DistrictService {
     }
 
 
-    public ApiResponse addDistrict(District district) {
-        Optional<Region> optionalRegion = regionRepository.findById(district.getRegion().getId());
+    public ApiResponse addDistrict(DistrictDto district) {
+        Optional<Region> optionalRegion = regionRepository.findById(district.getRegionId());
         if (!optionalRegion.isPresent()) {
             return new ApiResponse("Region Not Found!", false);
         }
@@ -47,30 +48,35 @@ public class DistrictService {
             return new ApiResponse("A district with this name exists", false);
         }
         try {
+            Region region = optionalRegion.get();
             District newDistrict = new District();
+
             newDistrict.setName(district.getName());
-            newDistrict.setRegion(district.getRegion());
+            newDistrict.setRegion(region);
+
             districtRepository.save(newDistrict);
+
             return new ApiResponse("Success!", true, newDistrict);
         } catch (Exception e) {
             return new ApiResponse("Error!", false);
         }
     }
 
-    public ApiResponse editDistrict(Long districtId, District district) {
-        Optional<Region> optionalRegion = regionRepository.findById(district.getRegion().getId());
-        if (!optionalRegion.isPresent()) {
-            return new ApiResponse("Region Not Found!", false);
-        }
+    public ApiResponse editDistrict(Long districtId, DistrictDto district) {
         Optional<District> optionalDistrict = districtRepository.findById(districtId);
         if (!optionalDistrict.isPresent()) {
             return new ApiResponse("District Not found!", false);
         }
         try {
+            Optional<Region> optionalRegion = regionRepository.findById(district.getRegionId());
+            Region region = optionalRegion.get();
             District newDistrict = optionalDistrict.get();
+
             newDistrict.setName(district.getName());
-            newDistrict.setRegion(district.getRegion());
+            newDistrict.setRegion(region);
+
             districtRepository.save(newDistrict);
+
             return new ApiResponse("Success!", true, newDistrict);
         } catch (Exception e) {
             return new ApiResponse("Error!", false);

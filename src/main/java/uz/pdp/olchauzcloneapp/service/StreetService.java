@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uz.pdp.olchauzcloneapp.dto.StreetDto;
 import uz.pdp.olchauzcloneapp.entity.address.District;
 import uz.pdp.olchauzcloneapp.entity.address.Street;
 import uz.pdp.olchauzcloneapp.poyload.ApiResponse;
@@ -49,8 +50,8 @@ public class StreetService {
     }
 
 
-    public ApiResponse addStreet(Street street) {
-        Optional<District> optionalDistrict = districtRepository.findById(street.getDistrict().getId());
+    public ApiResponse addStreet(StreetDto street) {
+        Optional<District> optionalDistrict = districtRepository.findById(street.getDistrictId());
         if (!optionalDistrict.isPresent()) {
             return new ApiResponse("District not found", false);
         }
@@ -59,14 +60,15 @@ public class StreetService {
             return new ApiResponse("A street with this name exists", false);
         }
         try {
+            District district = optionalDistrict.get();
             Street newStreet = new Street();
 
+            newStreet.setDistrict(district);
             newStreet.setName(street.getName());
             newStreet.setApartmentNumber(street.getApartmentNumber());
             newStreet.setFlatNumber(street.getFlatNumber());
             newStreet.setEntranceNumber(street.getEntranceNumber());
             newStreet.setFloor(street.getFloor());
-            newStreet.setDistrict(street.getDistrict());
 
             streetRepository.save(newStreet);
 
@@ -76,12 +78,14 @@ public class StreetService {
         }
     }
 
-    public ApiResponse editStreet(Long streetId, Street street) {
+    public ApiResponse editStreet(Long streetId, StreetDto street) {
         Optional<Street> optionalStreet = streetRepository.findById(streetId);
         if (!optionalStreet.isPresent()) {
             return new ApiResponse("Street not found!", false);
         }
         try {
+            Optional<District> optionalDistrict = districtRepository.findById(street.getDistrictId());
+            District district = optionalDistrict.get();
             Street newStreet = optionalStreet.get();
 
             newStreet.setName(street.getName());
@@ -89,10 +93,9 @@ public class StreetService {
             newStreet.setFlatNumber(street.getFlatNumber());
             newStreet.setEntranceNumber(street.getEntranceNumber());
             newStreet.setFloor(street.getFloor());
-            newStreet.setDistrict(street.getDistrict());
+            newStreet.setDistrict(district);
 
             streetRepository.save(newStreet);
-
             return new ApiResponse("Success!", true, newStreet);
         } catch (Exception e) {
             return new ApiResponse("Error!", false);
@@ -101,7 +104,7 @@ public class StreetService {
 
     public ApiResponse deleteStreet(Long streetId) {
         Optional<Street> optionalStreet = streetRepository.findById(streetId);
-        if (optionalStreet.isPresent()) {
+        if (!optionalStreet.isPresent()) {
             return new ApiResponse("Street not found!", false);
         }
         try {

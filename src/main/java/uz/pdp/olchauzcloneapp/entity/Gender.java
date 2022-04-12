@@ -17,7 +17,6 @@ import javax.persistence.Enumerated;
 @Entity(name = "genders")
 public class Gender extends AbsEntity {
 
-    @Enumerated(EnumType.STRING)
     private String name;
 
 }

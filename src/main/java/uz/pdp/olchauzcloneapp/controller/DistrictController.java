@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uz.pdp.olchauzcloneapp.dto.DistrictDto;
 import uz.pdp.olchauzcloneapp.entity.address.District;
 import uz.pdp.olchauzcloneapp.poyload.ApiResponse;
 import uz.pdp.olchauzcloneapp.service.DistrictService;
@@ -28,13 +29,13 @@ public class DistrictController {
     }
 
     @PostMapping
-    public HttpEntity<?> addDistrict(@RequestBody District district){
+    public HttpEntity<?> addDistrict(@RequestBody DistrictDto district){
         ApiResponse apiResponse = districtService.addDistrict(district);
         return ResponseEntity.status(apiResponse.isStatus() ? 200 : 404).body(apiResponse);
     }
 
     @PutMapping("/{districtId}")
-    public HttpEntity<?> editDistrict(@PathVariable Long districtId, @RequestBody District district){
+    public HttpEntity<?> editDistrict(@PathVariable Long districtId, @RequestBody DistrictDto district){
         ApiResponse apiResponse = districtService.editDistrict(districtId, district);
         return ResponseEntity.status(apiResponse.isStatus() ? 200 : 404).body(apiResponse);
     }
