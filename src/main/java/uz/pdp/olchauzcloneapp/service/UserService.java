@@ -39,18 +39,6 @@ public class UserService {
         }
         Gender gender = optionalGender.get();
 
-        List<Long> roleIds = userDto.getRoleIds();
-        Set<Role> roleList = new HashSet<>();
-        for (Long roleId : roleIds) {
-            Optional<Role> optionalRole = roleRepository.findById(roleId);
-            if (!optionalRole.isPresent()) {
-                return new ApiResponse("Role not found", false);
-            }
-            Role role = optionalRole.get();
-            roleList.add(role);
-        }
-
-        user.setRoles(roleList);
         user.setGender(gender);
         user.setFullName(userDto.getFullName());
         user.setEmail(userDto.getEmail());

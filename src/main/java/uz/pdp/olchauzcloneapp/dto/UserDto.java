@@ -23,6 +23,4 @@ public class UserDto {
     private LocalDate dateOfBirth;
 
     private Long genderId;
-
-    private List<Long> roleIds;
 }
