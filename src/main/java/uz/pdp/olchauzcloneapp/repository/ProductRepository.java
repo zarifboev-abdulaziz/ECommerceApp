@@ -5,7 +5,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import uz.pdp.olchauzcloneapp.entity.Product;
+import uz.pdp.olchauzcloneapp.projection.SearchProductProjection;
 import uz.pdp.olchauzcloneapp.projection.ViewProductProjection;
+
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
@@ -17,6 +20,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "                   c.name as categoryName\n" +
             "            from products p\n" +
             "            join categories c on c.id = p.category_id\n" +
-            "            where c.id =:categoryId")
-    Page<ViewProductProjection> getProductsByCategory(Pageable pageable, Long categoryId);
+            "            where c.id =:categoryId AND lower(p.name) like lower(concat('%', :search, '%'))")
+    Page<ViewProductProjection> getProductsByCategory(Pageable pageable, Long categoryId, String search);
+
+
+
 }
