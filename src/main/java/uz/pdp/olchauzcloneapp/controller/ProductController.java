@@ -28,5 +28,13 @@ public class ProductController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-
+    @GetMapping("/searchByName")
+    public HttpEntity<?> getProductByName(String search,
+                                          @RequestParam(defaultValue = "0") Integer page,
+                                          @RequestParam(defaultValue = "10") Integer size) {
+        ApiResponse productByName = productService.getProductByName(page, size, search);
+        return ResponseEntity.status(productByName.isSuccess() ? 200 : 400).body(productByName);
+    }
 }
+
+
