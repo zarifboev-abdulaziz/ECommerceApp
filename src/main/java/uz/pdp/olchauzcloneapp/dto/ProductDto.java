@@ -21,7 +21,11 @@ public class ProductDto {
 
     private double discount;
 
+    private Long coverImgId;
+
     private List<Long> photoIds;
 
     private List<Long> characteristicsValueIds;
+
+    private Long categoryId;
 }

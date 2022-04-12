@@ -53,7 +53,8 @@ public class AuthService implements UserDetailsService {
             return new ResponseEntity<>(new ApiResponse("Wrong", false, false), HttpStatus.ALREADY_REPORTED);
         }
         User user = new User(registerDto.getFullName(), registerDto.getEmail(),
-                passwordEncoder.encode(registerDto.getPassword()), Collections.singleton(roleRepository.findByName("ROLE_USER"))
+                passwordEncoder.encode(registerDto.getPassword()),
+                Collections.singleton(roleRepository.findByName("ROLE_USER"))
         );
 
 
@@ -64,9 +65,6 @@ public class AuthService implements UserDetailsService {
 
 
     }
-
-
-
 
 
     public HttpEntity login(LoginDto loginDto) {
@@ -86,7 +84,6 @@ public class AuthService implements UserDetailsService {
 
         }
     }
-
 
 
 }
