@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import uz.pdp.olchauzcloneapp.common.ApiResponse;
 import uz.pdp.olchauzcloneapp.entity.User;
-import uz.pdp.olchauzcloneapp.entity.template.ApiResponse;
 import uz.pdp.olchauzcloneapp.payload.LoginDto;
 import uz.pdp.olchauzcloneapp.payload.RegisterDto;
 import uz.pdp.olchauzcloneapp.repository.RoleRepository;
@@ -50,7 +50,7 @@ public class AuthService implements UserDetailsService {
     public HttpEntity registerUser(RegisterDto registerDto) {
 
         if (userRepository.existsByEmail(registerDto.getEmail())) {
-            return new ResponseEntity<>(new ApiResponse("Wrong", false, false), HttpStatus.ALREADY_REPORTED);
+            return new ResponseEntity<>(new ApiResponse("Wrong", false), HttpStatus.ALREADY_REPORTED);
         }
         User user = new User(registerDto.getFullName(), registerDto.getEmail(),
                 passwordEncoder.encode(registerDto.getPassword()),
@@ -61,7 +61,7 @@ public class AuthService implements UserDetailsService {
         userRepository.save(user);
 
 
-        return new ResponseEntity<>(new ApiResponse("Successfully Registered.", true, true), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse("Successfully Registered.", true), HttpStatus.OK);
 
 
     }
@@ -80,7 +80,7 @@ public class AuthService implements UserDetailsService {
 
 
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new ApiResponse("Email or password not found", false, false), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse("Email or password not found", false), HttpStatus.NOT_FOUND);
 
         }
     }

@@ -7,18 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.pdp.olchauzcloneapp.common.ApiResponse;
 import uz.pdp.olchauzcloneapp.dto.ProductDto;
-import uz.pdp.olchauzcloneapp.entity.Attachment;
-import uz.pdp.olchauzcloneapp.entity.Category;
-import uz.pdp.olchauzcloneapp.entity.CharacteristicsValues;
-import uz.pdp.olchauzcloneapp.entity.Product;
-import uz.pdp.olchauzcloneapp.entity.ProductRating;
+import uz.pdp.olchauzcloneapp.entity.*;
 import uz.pdp.olchauzcloneapp.projection.SearchProductProjection;
 import uz.pdp.olchauzcloneapp.entity.Product;
 import uz.pdp.olchauzcloneapp.projection.ViewProductProjection;
-import uz.pdp.olchauzcloneapp.repository.AttachmentRepository;
-import uz.pdp.olchauzcloneapp.repository.CategoryRepository;
-import uz.pdp.olchauzcloneapp.repository.CharacteristicsValuesRepository;
-import uz.pdp.olchauzcloneapp.repository.ProductRepository;
+import uz.pdp.olchauzcloneapp.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +23,8 @@ import java.util.*;
 public class ProductService {
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    ProductRatingRepository productRatingRepository;
 
     @Autowired
     AttachmentRepository attachmentRepository;
@@ -39,6 +34,8 @@ public class ProductService {
 
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    ProductDescriptionRepository productDescriptionRepository;
 
 
     public ApiResponse getProductsByCategory(Integer page, Integer size, Long categoryId, String search) {
@@ -65,17 +62,9 @@ public class ProductService {
         objectMap.put("photoIds", photoIds);
         objectMap.put("price", product.getPrice());
         objectMap.put("shortDescription", product.getShortDescription());
-
-//        One Product Projection
-//                =======================
-//        product id  w
-//        product name w
-//        product photo ids [] w
-//        product price w
-//        product short description w
-//        average rating w
-//        number of ratings w
-
+        objectMap.put("numberOfRatings", productRatingRepository.countByProductId(productId));
+        objectMap.put("averageRatings", productRatingRepository.getAverageRatingByProductId(productId));
+        objectMap.put("warrantyInMonth", product.getWarrantyPeriodMonth());
 
         return new ApiResponse("ok", true, objectMap);
     }
@@ -195,4 +184,19 @@ public class ProductService {
         return new ApiResponse("Success", true);
     }
 
+    public ApiResponse getProductFullDescription(Long productId) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if (!optionalProduct.isPresent()) return new ApiResponse("Product not found", false);
+
+        Optional<ProductDescription> optionalProductDescription = productDescriptionRepository.findByProductId(productId);
+        if (!optionalProductDescription.isPresent()) return new ApiResponse("Product Description not found", false);
+        ProductDescription productDescription = optionalProductDescription.get();
+
+
+        Map<String, Object> productDescriptions = new HashMap<>();
+        productDescriptions.put("productId", productId);
+        productDescriptions.put("fullDescription", productDescription.getDescription());
+
+        return new ApiResponse("ok", true, productDescriptions);
+    }
 }

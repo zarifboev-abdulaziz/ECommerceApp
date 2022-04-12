@@ -38,8 +38,9 @@ public class PurchaseService {
 
         Optional<PayType> payTypeOptional = payTypeRepository.findById(1L);
         Optional<Street> streetOptional = streetRepository.findById(1L);
-        List<OrderItem> orderItems = orderItemsRepository.findByCreatedByAndOrderStatus(Long.valueOf(session.getClientReferenceId()), OrderStatus.NEW);
+        List<OrderItem> orderItems = orderItemsRepository.findAllByCreatedByAndOrderStatus(Long.valueOf(session.getClientReferenceId()), OrderStatus.NEW);
         double amount =session.getAmountTotal().doubleValue() / 100;
+
 
         if (orderItems.size() != 0) {
 

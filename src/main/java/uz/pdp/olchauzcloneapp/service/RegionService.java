@@ -3,8 +3,9 @@ package uz.pdp.olchauzcloneapp.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uz.pdp.olchauzcloneapp.common.ApiResponse;
 import uz.pdp.olchauzcloneapp.entity.address.Region;
-import uz.pdp.olchauzcloneapp.poyload.ApiResponse;
+
 import uz.pdp.olchauzcloneapp.repository.RegionRepository;
 
 import java.util.List;

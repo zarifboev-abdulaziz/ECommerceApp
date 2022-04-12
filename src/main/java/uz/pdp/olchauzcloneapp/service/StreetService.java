@@ -6,10 +6,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uz.pdp.olchauzcloneapp.common.ApiResponse;
 import uz.pdp.olchauzcloneapp.dto.StreetDto;
 import uz.pdp.olchauzcloneapp.entity.address.District;
 import uz.pdp.olchauzcloneapp.entity.address.Street;
-import uz.pdp.olchauzcloneapp.poyload.ApiResponse;
 import uz.pdp.olchauzcloneapp.repository.DistrictRepository;
 import uz.pdp.olchauzcloneapp.repository.StreetRepository;
 
