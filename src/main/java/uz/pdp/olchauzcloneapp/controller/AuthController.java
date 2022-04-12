@@ -2,10 +2,7 @@ package uz.pdp.olchauzcloneapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.olchauzcloneapp.entity.template.ApiResponse;
 import uz.pdp.olchauzcloneapp.payload.LoginDto;
 import uz.pdp.olchauzcloneapp.payload.RegisterDto;
 import uz.pdp.olchauzcloneapp.repository.PermissionRepository;

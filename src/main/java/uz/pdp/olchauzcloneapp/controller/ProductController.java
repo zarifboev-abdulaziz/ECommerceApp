@@ -34,6 +34,14 @@ public class ProductController {
 
     }
 
+    @GetMapping("/view/product/full-description/{productId}")
+    public HttpEntity<?> getProductFullDescription(
+            @PathVariable Long productId) {
+        ApiResponse apiResponse = productService.getProductFullDescription(productId);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+
+    }
+
 
 
     @PostMapping
