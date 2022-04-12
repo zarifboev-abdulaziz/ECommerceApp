@@ -1,3 +1,7 @@
+insert into users
+(date_of_birth, email, enabled, full_name, gender, password, phone_number)
+VALUES (now(), 'user@gmail.com', true, 'user', 'MALE', '123', '123456789');  -- user id = 1
+
 insert into attachments (content_type, original_name, size) values ('image/png', 'photo1', 120);  -- attachment id = 1
 insert into attachments (content_type, original_name, size) values ('image/png', 'photo2', 120);  -- attachment id = 2
 insert into attachments (content_type, original_name, size) values ('image/png', 'photo3', 120);  -- attachment id = 3

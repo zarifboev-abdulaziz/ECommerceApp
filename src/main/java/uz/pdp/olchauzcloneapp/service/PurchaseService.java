@@ -30,7 +30,7 @@ public class PurchaseService {
 
     public boolean fulfillOrder(Session session) {
 
-        List<OrderItem> orderItems = orderItemsRepository.findByCreatedByAndOrderStatus(Long.valueOf(session.getClientReferenceId()), OrderStatus.
+        List<OrderItem> orderItems = orderItemsRepository.findAllByCreatedByAndOrderStatus(Long.valueOf(session.getClientReferenceId()), OrderStatus.
         NEW);
       if (orderItems.size()!=0){
 

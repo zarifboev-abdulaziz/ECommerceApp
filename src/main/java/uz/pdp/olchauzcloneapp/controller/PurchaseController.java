@@ -72,7 +72,7 @@ public class PurchaseController {
         List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
 
    //     List<CustomTicketForCart> ticketList = ticketRepository.getTicketByUserId(user.getId());
-        List<OrderItem> orderItems = orderItemsRepository.findByCreatedByAndOrderStatus(1L, OrderStatus.NEW);
+        List<OrderItem> orderItems = orderItemsRepository.findAllByCreatedByAndOrderStatus(1L, OrderStatus.NEW);
 
         return purchaseService.getStripeSession(user, lineItems, orderItems);
     }
