@@ -10,6 +10,7 @@ import uz.pdp.olchauzcloneapp.entity.ProductRating;
 import uz.pdp.olchauzcloneapp.projection.SearchProductProjection;
 import uz.pdp.olchauzcloneapp.entity.Product;
 import uz.pdp.olchauzcloneapp.projection.ViewProductProjection;
+import uz.pdp.olchauzcloneapp.repository.ProductRatingRepository;
 import uz.pdp.olchauzcloneapp.repository.ProductRepository;
 
 import java.util.*;
@@ -18,6 +19,8 @@ import java.util.*;
 public class ProductService {
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    ProductRatingRepository productRatingRepository;
 
 
 
@@ -45,6 +48,9 @@ public class ProductService {
         objectMap.put("photoIds", photoIds);
         objectMap.put("price", product.getPrice());
         objectMap.put("shortDescription", product.getShortDescription());
+        objectMap.put("numberOfRatings", productRatingRepository.countByProductId(productId));
+        objectMap.put("averageRatings", productRatingRepository.getAverageRatingByProductId(productId));
+
 
 //        One Product Projection
 //                =======================
