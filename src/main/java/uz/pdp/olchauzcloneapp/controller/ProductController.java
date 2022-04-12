@@ -21,20 +21,22 @@ public class ProductController {
     public HttpEntity<?> getProductsByCategory(
             @PathVariable Long categoryId,
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size) {
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "") String search) {
 
-        ApiResponse apiResponse = productService.getProductsByCategory(page, size, categoryId);
+        ApiResponse apiResponse = productService.getProductsByCategory(page, size, categoryId, search);
 
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
-    @GetMapping("/searchByName")
-    public HttpEntity<?> getProductByName(String search,
-                                          @RequestParam(defaultValue = "0") Integer page,
-                                          @RequestParam(defaultValue = "10") Integer size) {
-        ApiResponse productByName = productService.getProductByName(page, size, search);
-        return ResponseEntity.status(productByName.isSuccess() ? 200 : 400).body(productByName);
+    @GetMapping("/view/product/{productId}")
+    public HttpEntity<?> getProductsById(
+            @PathVariable Long productId) {
+        ApiResponse apiResponse = productService.getProductsById(productId);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+
     }
+
 }
 
 

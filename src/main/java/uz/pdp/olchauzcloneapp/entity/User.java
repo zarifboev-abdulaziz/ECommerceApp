@@ -40,6 +40,13 @@ public class User extends AbsEntity implements UserDetails {
     private boolean enabled = false;
 
 
+    public User(String fullName, String email, String password, Set<Role> roles) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
 
 
     //UserDetails methods
