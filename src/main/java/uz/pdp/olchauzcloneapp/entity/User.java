@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import uz.pdp.olchauzcloneapp.entity.enums.Gender;
 import uz.pdp.olchauzcloneapp.entity.template.AbsEntity;
 
 
@@ -32,7 +31,7 @@ public class User extends AbsEntity implements UserDetails {
     private String password;
     private LocalDate dateOfBirth;
 
-    @Enumerated(value = EnumType.STRING)
+    @ManyToOne
     private Gender gender;
 
     @ManyToMany
