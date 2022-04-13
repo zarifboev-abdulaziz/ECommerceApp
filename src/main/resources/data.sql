@@ -35,6 +35,8 @@ insert into products_photos (products_id, photos_id) VALUES (4, 4);
 insert into products_photos (products_id, photos_id) VALUES (5, 1);
 insert into products_photos (products_id, photos_id) VALUES (5, 5);
 
+insert into product_descriptions (description, product_id) VALUES ('Some full description with details', 1);
+
 insert into characteristics (name) VALUES ('Language');     -- id = 1
 insert into characteristics (name) VALUES ('Page');         -- id = 2
 insert into characteristics (name) VALUES ('CoverType');    -- id = 3
@@ -72,3 +74,6 @@ insert into products_characteristics_values (products_id, characteristics_values
 insert into products_characteristics_values (products_id, characteristics_values_id) VALUES (1, 7);
 insert into products_characteristics_values (products_id, characteristics_values_id) VALUES (1, 8);
 
+insert into regions (name) VALUES ('Toshkent Shahri');
+insert into districts (name, region_id) VALUES ('Chilonzor', 1);
+insert into pay_types (commission_fee, name) VALUES (0.3, 'Stripe');

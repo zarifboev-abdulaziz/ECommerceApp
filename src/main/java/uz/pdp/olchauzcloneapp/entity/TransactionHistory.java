@@ -22,6 +22,7 @@ public class TransactionHistory extends AbsEntity {
 
     @ManyToOne
     private Street street;
+    private String paymentIntent;
 
 
 }

@@ -24,6 +24,12 @@ public class CartController {
         return ResponseEntity.status(allCart.isSuccess() ? 200 : 400).body(allCart);
     }
 
+    @GetMapping("/ordered-products")
+    public HttpEntity<?> getOrderedProducts() {
+        ApiResponse allCart = cartService.getOrderedProducts();
+        return ResponseEntity.status(allCart.isSuccess() ? 200 : 400).body(allCart);
+    }
+
     @DeleteMapping
     public HttpEntity<?> clearAllProductsInTheCart() {
         ApiResponse apiResponse = cartService.clearCart();
@@ -41,7 +47,6 @@ public class CartController {
     public HttpEntity<?> setProductQuantity(@RequestBody OrderItemDto orderItemDto) {
         ApiResponse apiResponse = cartService.setProductQuantity(orderItemDto);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
-
     }
 
 
