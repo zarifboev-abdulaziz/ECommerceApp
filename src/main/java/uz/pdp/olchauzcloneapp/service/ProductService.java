@@ -38,9 +38,11 @@ public class ProductService {
     @Autowired
     ProductDescriptionRepository productDescriptionRepository;
 
-    public ApiResponse getAllProducts(){
+    public ApiResponse getAllProducts() {
         List<Product> products = productRepository.findAll();
-        if (products.isEmpty()) {return new ApiResponse("Product is not found", false);}
+        if (products.isEmpty()) {
+            return new ApiResponse("Product is not found", false);
+        }
 
         List<Map<String, Object>> allProduct = new ArrayList<>();
 
@@ -88,7 +90,7 @@ public class ProductService {
         objectMap.put("id", product.getId());
         objectMap.put("name", product.getName());
         objectMap.put("coverImageId", product.getCoverImage().getId());
-            objectMap.put("photoIds", photoIds);
+        objectMap.put("photoIds", photoIds);
         objectMap.put("price", product.getPrice());
         objectMap.put("shortDescription", product.getShortDescription());
         objectMap.put("numberOfRatings", productRatingRepository.countByProductId(productId));
@@ -203,7 +205,7 @@ public class ProductService {
         }
     }
 
-    public ApiResponse deleteProduct(Long id){
+    public ApiResponse deleteProduct(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (!optionalProduct.isPresent()) {
             return new ApiResponse("Product is not found", false);
@@ -236,4 +238,18 @@ public class ProductService {
 
         return new ApiResponse("Ok", true, productCharacteristics);
     }
+
+    public ApiResponse getProductByPrice(Integer page, Integer size, Long categoryId, double startingPrice,double finalPrise) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ViewProductProjection> productsFromPrice = productRepository.getProductsFromPrice(pageable,categoryId, startingPrice, finalPrise);
+        return new ApiResponse("Success", true, productsFromPrice);
+    }
+
+//    public ApiResponse getProductsByCategory(Integer page, Integer size, Long categoryId, String search) {
+//        Pageable pageable = PageRequest.of(page, size);
+//
+//        Page<ViewProductProjection> products = productRepository.getProductsByCategory(pageable, categoryId, search);
+//
+//        return new ApiResponse("ok", true, products);
+//    }
 }
