@@ -38,6 +38,15 @@ public class CategoryService {
                 .orElseGet(() -> new ApiResponse("Category not found!", false));
     }
 
+    // get Category by ParentId
+    public ApiResponse getCategoryByParentId(Long parentId) {
+        List<Category> categoryByParentId = categoryRepository.findCategoryByParentId(parentId);
+        if (categoryByParentId.isEmpty()) {
+            return new ApiResponse("Category not found!", false);
+        }
+        return new ApiResponse("Success!", true, categoryByParentId);
+    }
+
     // Add New Category
     public ApiResponse addCategory(CategoryDto categoryDto) {
         Category categoryByName = categoryRepository.findCategoryByName(categoryDto.getName());
