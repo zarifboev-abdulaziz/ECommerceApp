@@ -26,7 +26,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<ViewProductProjection> getProductsByCategory(Pageable pageable, Long categoryId, String search);
 
     @Query(nativeQuery = true, value = "select c.name as characteristic," +
-            " v.value as characteristicValue \n" +
+            " v.values as characteristicValue \n" +
             "from products p\n" +
             "join products_characteristics_values pcv on p.id = pcv.products_id\n" +
             "join characteristics_values cv on pcv.characteristics_values_id = cv.id\n" +
@@ -34,6 +34,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "join values v on cv.value_id = v.id\n" +
             "where p.id =:productId")
     List<ProductCharacteristics> getProductCharacteristics(Long productId);
+
+
 
 
 }
