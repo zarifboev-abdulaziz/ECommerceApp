@@ -14,6 +14,14 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+
+    @GetMapping
+    public HttpEntity<?> getAllProducts(){
+        ApiResponse apiResponse = productService.getAllProducts();
+        return ResponseEntity.status(apiResponse.isSuccess()?200:404).body(apiResponse);
+    }
+
+
     @GetMapping("/view/{categoryId}")
     public HttpEntity<?> getProductsByCategory(
             @PathVariable Long categoryId,
