@@ -20,5 +20,9 @@ public interface OrderItemsRepository extends JpaRepository<OrderItem, Long> {
 
     boolean existsByCreatedByAndProductIdAndOrderStatus(Long createdBy, Long product_id, OrderStatus orderStatus);
 
+    void deleteByCreatedByAndOrderStatus(Long createdBy, OrderStatus orderStatus);
+
+    void deleteByProductId(Long productId);
+
 
 }

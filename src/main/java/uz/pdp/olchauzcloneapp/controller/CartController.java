@@ -24,9 +24,9 @@ public class CartController {
         return ResponseEntity.status(allCart.isSuccess() ? 200 : 400).body(allCart);
     }
 
-    @DeleteMapping
-    public HttpEntity<?> clearAllProductsInTheCart() {
-        ApiResponse apiResponse = cartService.clearCart();
+    @DeleteMapping("/{id}")
+    public HttpEntity<?> clearAllProductsInTheCart(@PathVariable Long id) {
+        ApiResponse apiResponse = cartService.clearCart(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
     }
 
