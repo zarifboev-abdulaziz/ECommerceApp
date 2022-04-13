@@ -58,9 +58,9 @@ public class CartService {
     }
 
     @Transactional
-    public ApiResponse clearCart(){
+    public ApiResponse clearCart(Long id){
         try {
-            orderItemsRepository.deleteAllByCreatedByAndOrderStatus(1L, OrderStatus.NEW);
+            orderItemsRepository.deleteByProductId(id);
         }catch (Exception e){
             e.printStackTrace();
             return new ApiResponse("Error in deleting", false);
