@@ -38,8 +38,12 @@ public class PurchaseController {
     @SneakyThrows
     @PostMapping("/webhook")
     public void handle(@RequestBody String payload, @RequestHeader(name = "Stripe-Signature") String signHeader, HttpServletResponse response) {
-        String endpointSecret = "whsec_caf7231c252f6538d81bf44b2f1ee721c5b42440b2211aa88ed4dbc1aa3393b8";
-        Stripe.apiKey = "sk_test_51KhfDrGNKbQ4R3wKLw6i1KUhcMkIpIxduTX2JOaooftmI9u3lxS8j4apN9kYJ9UZVRl9230Jn1kWBALtzysklSEx007WRYy1hA";
+//        String endpointSecret = "whsec_caf7231c252f6538d81bf44b2f1ee721c5b42440b2211aa88ed4dbc1aa3393b8";
+//        Stripe.apiKey = "sk_test_51KhfDrGNKbQ4R3wKLw6i1KUhcMkIpIxduTX2JOaooftmI9u3lxS8j4apN9kYJ9UZVRl9230Jn1kWBALtzysklSEx007WRYy1hA";
+
+        Stripe.apiKey = "sk_test_51Kiz3rEhoGDMoOBR40fygRgoRauXuzCNiAQjVjT62m8VunOcTYCmk7SVBQ07AaYeoe7jXZiRw0D17kUviPfAdbYr00hNGzkbE8";
+        String endpointSecret = "whsec_9d3fa95ded35d69e4b0c61d55739c534f9158550397f11a6bdabcf576c70941d";
+
 //      to activate:  stripe listen --forward-to localhost:8080/webhook
         Event event = Webhook.constructEvent(payload, signHeader, endpointSecret);
 
