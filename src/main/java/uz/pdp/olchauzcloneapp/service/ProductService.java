@@ -38,6 +38,34 @@ public class ProductService {
     @Autowired
     ProductDescriptionRepository productDescriptionRepository;
 
+    public ApiResponse getAllProducts(){
+        List<Product> products = productRepository.findAll();
+        if (products.isEmpty()) {return new ApiResponse("Product is not found", false);}
+
+        List<Map<String, Object>> allProduct = new ArrayList<>();
+
+        for (Product product : products) {
+            List<Long> photoIds = new ArrayList<>();
+            product.getPhotos().forEach(attachment -> photoIds.add(attachment.getId()));
+
+            List<Long> valueIds = new ArrayList<>();
+            product.getCharacteristicsValues().forEach(characteristicsValues1 -> valueIds.add(characteristicsValues1.getId()));
+
+            Map<String, Object> mapObjects = new HashMap<>();
+            mapObjects.put("Id", product.getId());
+            mapObjects.put("Name", product.getName());
+            mapObjects.put("ShortDescription", product.getShortDescription());
+            mapObjects.put("Price", product.getPrice());
+            mapObjects.put("WarrantyPeriodMonth", product.getWarrantyPeriodMonth());
+            mapObjects.put("Discount", product.getDiscount());
+            mapObjects.put("Photos", photoIds);
+            mapObjects.put("CoverImage", product.getCoverImage());
+            mapObjects.put("CharacteristicsValues", valueIds);
+            mapObjects.put("Category", product.getCategory());
+            allProduct.add(mapObjects);
+        }
+        return new ApiResponse("Success", true, allProduct);
+    }
 
     public ApiResponse getProductsByCategory(Integer page, Integer size, Long categoryId, String search) {
         Pageable pageable = PageRequest.of(page, size);
@@ -60,7 +88,7 @@ public class ProductService {
         objectMap.put("id", product.getId());
         objectMap.put("name", product.getName());
         objectMap.put("coverImageId", product.getCoverImage().getId());
-        objectMap.put("photoIds", photoIds);
+            objectMap.put("photoIds", photoIds);
         objectMap.put("price", product.getPrice());
         objectMap.put("shortDescription", product.getShortDescription());
         objectMap.put("numberOfRatings", productRatingRepository.countByProductId(productId));
@@ -192,8 +220,6 @@ public class ProductService {
         Optional<ProductDescription> optionalProductDescription = productDescriptionRepository.findByProductId(productId);
         if (!optionalProductDescription.isPresent()) return new ApiResponse("Product Description not found", false);
         ProductDescription productDescription = optionalProductDescription.get();
-
-
         Map<String, Object> productDescriptions = new HashMap<>();
         productDescriptions.put("productId", productId);
         productDescriptions.put("fullDescription", productDescription.getDescription());
