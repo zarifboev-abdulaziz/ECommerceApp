@@ -16,9 +16,9 @@ public class ProductController {
 
 
     @GetMapping
-    public HttpEntity<?> getAllProducts(){
+    public HttpEntity<?> getAllProducts() {
         ApiResponse apiResponse = productService.getAllProducts();
-        return ResponseEntity.status(apiResponse.isSuccess()?200:404).body(apiResponse);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
     }
 
 
@@ -57,23 +57,33 @@ public class ProductController {
     }
 
 
-
     @PostMapping
-    public HttpEntity<?> addProduct(@RequestBody ProductDto productDto, Long id){
+    public HttpEntity<?> addProduct(@RequestBody ProductDto productDto, Long id) {
         ApiResponse apiResponse = productService.addOrUpdateProduct(productDto, id);
-        return ResponseEntity.status(apiResponse.isSuccess()?200:404).body(apiResponse);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
     }
 
     @PutMapping("/{id}")
-    public HttpEntity<?> updateProduct(@RequestBody ProductDto productDto, @PathVariable Long id){
+    public HttpEntity<?> updateProduct(@RequestBody ProductDto productDto, @PathVariable Long id) {
         ApiResponse apiResponse = productService.addOrUpdateProduct(productDto, id);
-        return ResponseEntity.status(apiResponse.isSuccess()?200:404).body(apiResponse);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteProduct(@PathVariable Long id){
+    public HttpEntity<?> deleteProduct(@PathVariable Long id) {
         ApiResponse apiResponse = productService.deleteProduct(id);
-        return ResponseEntity.status(apiResponse.isSuccess()?200:404).body(apiResponse);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
+    }
+
+    @GetMapping("/view/product/price/{categoryId}")
+    public HttpEntity<?> getProductsByPrice(
+            @PathVariable Long categoryId,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            Integer startingPrice,
+            Integer finalPrice) {
+        ApiResponse productByPrice = productService.getProductByPrice(page, size, categoryId, startingPrice, finalPrice);
+        return ResponseEntity.status(productByPrice.isSuccess() ? 200 : 400).body(productByPrice);
     }
 }
 

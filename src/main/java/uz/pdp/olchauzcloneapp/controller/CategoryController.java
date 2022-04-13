@@ -27,6 +27,12 @@ public class CategoryController {
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
     }
 
+    @GetMapping("/getParentId/{parentId}")
+    public HttpEntity<?> getCategoryByParentId(@PathVariable Long parentId){
+        ApiResponse categoryByParentId = categoryService.getCategoryByParentId(parentId);
+        return ResponseEntity.status(categoryByParentId.isSuccess() ? 200 : 404).body(categoryByParentId);
+    }
+
     @PostMapping
     public HttpEntity<?> addCategory(@RequestBody CategoryDto categoryDto){
         ApiResponse apiResponse = categoryService.addCategory(categoryDto);

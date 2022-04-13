@@ -45,7 +45,7 @@ public class PurchaseController {
     @Value("${STRIPE_API_KEY}")
     private String stripeApiKey;
 
-//    @SneakyThrows
+    //    @SneakyThrows
     @PostMapping("/webhook")
     public void handle(@RequestBody String payload, @RequestHeader(name = "Stripe-Signature") String signHeader, HttpServletResponse response) {
         String endpointSecret = webhookKey;
@@ -63,16 +63,16 @@ public class PurchaseController {
         System.out.println("Order fulfilled");
         if ("checkout.session.completed".equals(event.getType())) {
             Session session = (Session) event.getDataObjectDeserializer().getObject().get();
-       //    Optional<User> optionalUser = userRepository.findById((long) Integer.parseInt(session.getClientReferenceId()));
-  //          List<Ticket> allByCartIdAndStatus =
-   //                 ticketRepository.findAllByUserIdAndTicketStatus(optionalUser.get().getId(), TicketStatus.NEW);*/
+            //    Optional<User> optionalUser = userRepository.findById((long) Integer.parseInt(session.getClientReferenceId()));
+            //          List<Ticket> allByCartIdAndStatus =
+            //                 ticketRepository.findAllByUserIdAndTicketStatus(optionalUser.get().getId(), TicketStatus.NEW);*/
 
-                purchaseService.fulfillOrder(session);
+            purchaseService.fulfillOrder(session);
 
-
-            }
 
         }
+
+    }
 
 
 
