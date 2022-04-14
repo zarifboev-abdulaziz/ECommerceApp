@@ -17,7 +17,7 @@ public class DistrictController {
     private final DistrictService districtService;
 
     @GetMapping
-    public HttpEntity<?> allDistrict(){
+            public HttpEntity<?> allDistrict(){
         ApiResponse apiResponse = districtService.getAllDistrict();
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
     }
