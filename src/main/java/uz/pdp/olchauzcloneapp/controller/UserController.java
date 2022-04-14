@@ -20,4 +20,5 @@ public class UserController {
         ApiResponse apiResponse = userService.editUser(userId, userDto);
         return ResponseEntity.status(apiResponse.isSuccess()?200:404).body(apiResponse);
     }
+
 }

@@ -6,7 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.olchauzcloneapp.common.ApiResponse;
 import uz.pdp.olchauzcloneapp.dto.ProductDto;
+import uz.pdp.olchauzcloneapp.entity.enums.Authority;
 import uz.pdp.olchauzcloneapp.service.ProductService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
@@ -82,9 +86,11 @@ public class ProductController {
             @RequestParam(defaultValue = "10") Integer size,
             Integer startingPrice,
             Integer finalPrice) {
+
         ApiResponse productByPrice = productService.getProductByPrice(page, size, categoryId, startingPrice, finalPrice);
         return ResponseEntity.status(productByPrice.isSuccess() ? 200 : 400).body(productByPrice);
     }
+
 }
 
 

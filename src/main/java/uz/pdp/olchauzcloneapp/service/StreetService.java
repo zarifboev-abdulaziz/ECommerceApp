@@ -10,9 +10,11 @@ import uz.pdp.olchauzcloneapp.common.ApiResponse;
 import uz.pdp.olchauzcloneapp.dto.StreetDto;
 import uz.pdp.olchauzcloneapp.entity.address.District;
 import uz.pdp.olchauzcloneapp.entity.address.Street;
+import uz.pdp.olchauzcloneapp.entity.enums.Authority;
 import uz.pdp.olchauzcloneapp.repository.DistrictRepository;
 import uz.pdp.olchauzcloneapp.repository.StreetRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,4 +118,6 @@ public class StreetService {
             return new ApiResponse("Error", false);
         }
     }
+
+
 }
