@@ -46,17 +46,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
+    private static final String[] WHITE_LIST = {
+            "/swagger-resources/**",
+            "/swagger-ui/index.html",
+            "/v3/api-docs",
+            "/webjars/**"
+    };
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-     http.
+        http.
                 csrf().disable()
                 .httpBasic().disable()
                 .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
-                .anyRequest()
-              .permitAll();
-//                .authenticated();
+             .antMatchers(WHITE_LIST)
+             .permitAll()
+             .antMatchers("/auth/**")
+             .permitAll()
+             .anyRequest()
+//             .permitAll()
+           .authenticated()
+        ;
+
+
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
