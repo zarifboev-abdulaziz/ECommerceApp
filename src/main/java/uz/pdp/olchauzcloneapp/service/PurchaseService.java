@@ -8,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import uz.pdp.olchauzcloneapp.dto.AddressDto;
 import uz.pdp.olchauzcloneapp.entity.*;
+import uz.pdp.olchauzcloneapp.entity.address.District;
 import uz.pdp.olchauzcloneapp.entity.address.Street;
 import uz.pdp.olchauzcloneapp.entity.enums.OrderStatus;
 import uz.pdp.olchauzcloneapp.repository.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -26,56 +30,65 @@ public class PurchaseService {
     TransactionHistoryRepository transactionHistoryRepository;
     @Autowired
     TransactionHistoryProductsRepository transactionHistoryProductsRepository;
-
     @Autowired
-    PayTypeRepository payTypeRepository;
+    RegionRepository regionRepository;
     @Autowired
-    UserRepository userRepository;
+    DistrictRepository districtRepository;
     @Autowired
     StreetRepository streetRepository;
+    @Autowired
+    PayTypeRepository payTypeRepository;
+
 
     public boolean fulfillOrder(Session session) {
 
-        Optional<PayType> payTypeOptional = payTypeRepository.findById(1L);
-        Optional<Street> streetOptional = streetRepository.findById(1L);
-        List<OrderItem> orderItems = orderItemsRepository.findAllByCreatedByAndOrderStatus(Long.valueOf(session.getClientReferenceId()), OrderStatus.NEW);
-        double amount =session.getAmountTotal().doubleValue() / 100;
+        Map<String, String> metadata = session.getMetadata();
+        String addressId = metadata.get("addressId");
+        Optional<Street> optionalStreet = streetRepository.findById(Long.valueOf(addressId));
+        Optional<PayType> optionalPayType = payTypeRepository.findByName("Stripe");
 
 
-        if (orderItems.size() != 0) {
+        List<OrderItem> orderItems = orderItemsRepository.findAllByCreatedByAndOrderStatus(
+                Long.valueOf(session.getClientReferenceId()), OrderStatus.NEW);
 
-            TransactionHistory savedTransactionHistory = transactionHistoryRepository.save(new TransactionHistory(payTypeOptional.get(), amount,streetOptional.get() ));
-            for (OrderItem orderItem : orderItems) {
-
-
-                transactionHistoryProductsRepository.save(new TransactionHistoryProducts(savedTransactionHistory, orderItem.getProduct(), orderItem.getQuantity()));
-            }
-            return true;
-        } else
+        if (orderItems.size() == 0 || !optionalStreet.isPresent() || !optionalPayType.isPresent()) {
             return false;
+        }
 
+        TransactionHistory transactionHistory = new TransactionHistory(optionalPayType.get(), (session.getAmountTotal().doubleValue() / 100), optionalStreet.get(), session.getPaymentIntent());
+        transactionHistory.setCreatedBy(1L);
+        TransactionHistory savedTransactionHistory = transactionHistoryRepository.save(transactionHistory);
+
+
+        for (OrderItem orderItem : orderItems) {
+            transactionHistoryProductsRepository.save(new TransactionHistoryProducts(savedTransactionHistory, orderItem.getProduct(), orderItem.getQuantity()));
+            orderItem.setOrderStatus(OrderStatus.ORDERED);
+            orderItemsRepository.save(orderItem);
+        }
+
+        return true;
     }
 
-    public ResponseEntity<?> getStripeSession(User user, List<SessionCreateParams.LineItem> lineItems, List<OrderItem> orderItems) {
-        for (OrderItem ticket : orderItems) {
+    public ResponseEntity<?> getStripeSession(User user, List<SessionCreateParams.LineItem> lineItems, List<OrderItem> orderItems, Street street) {
+        for (OrderItem product : orderItems) {
 
-            double ticketPrice = (ticket.getProduct().getPrice() * 100 + 30) / (1 - 2.9 / 100);
+            double productPrice = (product.getProduct().getPrice() * 100 + 0.3) / (1 - 2.9 / 100);
             SessionCreateParams.LineItem.PriceData.ProductData productData = SessionCreateParams.LineItem.PriceData.ProductData
                     .builder()
-                    .setName(ticket.getProduct().getName())
+                    .setName(product.getProduct().getName())
                     .build();
 
             SessionCreateParams.LineItem.PriceData priceData = SessionCreateParams.LineItem.PriceData
                     .builder()
                     .setProductData(productData)
                     .setCurrency("usd")
-                    .setUnitAmount((long) (ticketPrice ))
+                    .setUnitAmount((long) (productPrice))
                     .build();
 
             SessionCreateParams.LineItem lineItem = SessionCreateParams.LineItem
                     .builder()
                     .setPriceData(priceData)
-                    .setQuantity(1L)
+                    .setQuantity((long) product.getQuantity())
                     .build();
 
 
@@ -83,6 +96,7 @@ public class PurchaseService {
 
 
         }
+
         SessionCreateParams params = SessionCreateParams
                 .builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
@@ -91,6 +105,7 @@ public class PurchaseService {
                 .setSuccessUrl("http://localhost:8080/success")
                 .setClientReferenceId(user.getId().toString())
                 .addAllLineItem(lineItems)
+                .putMetadata("addressId", street.getId().toString())
                 .build();
         try {
             Session session = Session.create(params);
@@ -105,4 +120,14 @@ public class PurchaseService {
     }
 
 
+    public Street saveAddress(AddressDto addressDto) {
+        Optional<District> optionalDistrict = districtRepository.findById(addressDto.getDistrictId());
+        if (!optionalDistrict.isPresent()) return null;
+
+        Street street = new Street(optionalDistrict.get(), addressDto.getStreetName(), addressDto.getApartmentNumber(),
+                addressDto.getFlatNumber(), addressDto.getEntranceNumber(), addressDto.getFloor());
+
+        Street savedStreet = streetRepository.save(street);
+        return savedStreet;
+    }
 }

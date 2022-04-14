@@ -1,18 +1,23 @@
 package uz.pdp.olchauzcloneapp.controller;
 
 import com.stripe.Stripe;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import uz.pdp.olchauzcloneapp.dto.AddressDto;
 import uz.pdp.olchauzcloneapp.entity.OrderItem;
 import uz.pdp.olchauzcloneapp.entity.User;
+import uz.pdp.olchauzcloneapp.entity.address.Street;
 import uz.pdp.olchauzcloneapp.entity.enums.OrderStatus;
 import uz.pdp.olchauzcloneapp.repository.OrderItemsRepository;
 import uz.pdp.olchauzcloneapp.repository.UserRepository;
@@ -35,50 +40,57 @@ public class PurchaseController {
     @Autowired
     OrderItemsRepository orderItemsRepository;
 
-    @SneakyThrows
+    @Value("${WEBHOOK_KEY}")
+    private String webhookKey;
+    @Value("${STRIPE_API_KEY}")
+    private String stripeApiKey;
+
+    //    @SneakyThrows
     @PostMapping("/webhook")
     public void handle(@RequestBody String payload, @RequestHeader(name = "Stripe-Signature") String signHeader, HttpServletResponse response) {
-//        String endpointSecret = "whsec_caf7231c252f6538d81bf44b2f1ee721c5b42440b2211aa88ed4dbc1aa3393b8";
-//        Stripe.apiKey = "sk_test_51KhfDrGNKbQ4R3wKLw6i1KUhcMkIpIxduTX2JOaooftmI9u3lxS8j4apN9kYJ9UZVRl9230Jn1kWBALtzysklSEx007WRYy1hA";
-
-        Stripe.apiKey = "sk_test_51Kiz3rEhoGDMoOBR40fygRgoRauXuzCNiAQjVjT62m8VunOcTYCmk7SVBQ07AaYeoe7jXZiRw0D17kUviPfAdbYr00hNGzkbE8";
-        String endpointSecret = "whsec_9d3fa95ded35d69e4b0c61d55739c534f9158550397f11a6bdabcf576c70941d";
-
+        String endpointSecret = webhookKey;
+        Stripe.apiKey = stripeApiKey;
 //      to activate:  stripe listen --forward-to localhost:8080/webhook
-        Event event = Webhook.constructEvent(payload, signHeader, endpointSecret);
+
+
+        Event event = null;
+        try {
+            event = Webhook.constructEvent(payload, signHeader, endpointSecret);
+        } catch (SignatureVerificationException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("Order fulfilled");
         if ("checkout.session.completed".equals(event.getType())) {
             Session session = (Session) event.getDataObjectDeserializer().getObject().get();
-       //    Optional<User> optionalUser = userRepository.findById((long) Integer.parseInt(session.getClientReferenceId()));
-  //          List<Ticket> allByCartIdAndStatus =
-   //                 ticketRepository.findAllByUserIdAndTicketStatus(optionalUser.get().getId(), TicketStatus.NEW);*/
+            //    Optional<User> optionalUser = userRepository.findById((long) Integer.parseInt(session.getClientReferenceId()));
+            //          List<Ticket> allByCartIdAndStatus =
+            //                 ticketRepository.findAllByUserIdAndTicketStatus(optionalUser.get().getId(), TicketStatus.NEW);*/
 
-                purchaseService.fulfillOrder(session);
+            purchaseService.fulfillOrder(session);
 
-
-
-
-
-            }
 
         }
 
+    }
 
 
 
-    @GetMapping("/charge")
-    public HttpEntity<?> createStripeSession() {
+    @PostMapping("/purchase-products")
+    public HttpEntity<?> createStripeSession(@RequestBody AddressDto addressDto) {
 
-        Stripe.apiKey = "sk_test_51KhfDrGNKbQ4R3wKLw6i1KUhcMkIpIxduTX2JOaooftmI9u3lxS8j4apN9kYJ9UZVRl9230Jn1kWBALtzysklSEx007WRYy1hA";
+        Stripe.apiKey = stripeApiKey;
         Optional<User> optionalUser = userRepository.findById(1L);
         User user = optionalUser.get();
         List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
 
-   //     List<CustomTicketForCart> ticketList = ticketRepository.getTicketByUserId(user.getId());
         List<OrderItem> orderItems = orderItemsRepository.findAllByCreatedByAndOrderStatus(1L, OrderStatus.NEW);
+        Street street = purchaseService.saveAddress(addressDto);
+        if (street == null){
+            return ResponseEntity.status(404).body("District Not Found");
+        }
 
-        return purchaseService.getStripeSession(user, lineItems, orderItems);
+        return purchaseService.getStripeSession(user, lineItems, orderItems, street);
     }
 
 }

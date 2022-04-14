@@ -4,6 +4,8 @@ package uz.pdp.olchauzcloneapp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import uz.pdp.olchauzcloneapp.entity.PayType;
+import java.util.Optional;
 
 public interface PayTypeRepository extends JpaRepository<PayType,Long> {
+    Optional<PayType> findByName(String name);
 }

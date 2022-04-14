@@ -35,9 +35,9 @@ public class ProductController {
     }
 
     @GetMapping("/view/product/{productId}")
-    public HttpEntity<?> getProductsById(
+    public HttpEntity<?> getProductById(
             @PathVariable Long productId) {
-        ApiResponse apiResponse = productService.getProductsById(productId);
+        ApiResponse apiResponse = productService.getProductById(productId);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
 
     }

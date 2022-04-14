@@ -100,4 +100,28 @@ public class CartService {
         orderItemsRepository.save(orderItem);
         return new ApiResponse("Successfully saved", true);
     }
+
+    public ApiResponse getOrderedProducts() {
+        List<OrderItem> orderItemsInTheCart = orderItemsRepository.findAllByCreatedByAndOrderStatus(1L, OrderStatus.ORDERED);
+
+        if (orderItemsInTheCart.size() == 0){
+            return new ApiResponse("No Ordered Items yet",false);
+        }
+
+        List<Map<String, Object>> orderItems = new ArrayList<>();
+
+        for (OrderItem orderItem : orderItemsInTheCart) {
+            Product product = orderItem.getProduct();
+            Map<String, Object> orderItemMap = new HashMap<>();
+            orderItemMap.put("productId", product.getId());
+            orderItemMap.put("orderItemId", orderItem.getId());
+            orderItemMap.put("productName", product.getName());
+            orderItemMap.put("productCoverImageId", product.getCoverImage().getId());
+            orderItemMap.put("productPrice", product.getPrice());
+            orderItemMap.put("quantity", orderItem.getQuantity());
+            orderItems.add(orderItemMap);
+        }
+
+        return new ApiResponse("ok",true, orderItems);
+    }
 }
